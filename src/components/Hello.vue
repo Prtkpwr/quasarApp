@@ -3,9 +3,9 @@
 				<div class="loginmodal-container">
 					<h1>Login to Your Account</h1><br>
 				  <form>
-					<input type="text" name="user" placeholder="Username">
-					<input type="password" name="pass" placeholder="Password">
-					<button @click='loginAction'>Login</button>
+					<input type="text" v-model="email" placeholder="Username">
+					<input type="password" v-model="password"  placeholder="Password">
+					<q-btn @click='loginAction'>Login</q-btn>
 				  </form>
 					
 				  <div class="login-help">
@@ -16,13 +16,89 @@
 </template>
 
 <script>
+import axios from 'axios'
+import {
+  QCard,
+  QToolbar,
+  QListHeader,
+  QToolbarTitle,
+  QCardTitle,
+  QLayout,
+  QCardMedia,
+  QCardActions,
+  QCardSeparator,
+  QCardMain,
+  QList,
+  QItem,
+  QItemMain,
+  QItemSide,
+  QItemTile,
+  QCollapsible,
+  QRating,
+  QBtn,
+  QParallax,
+  QIcon,
+  QPopover,
+  QVideo
+} from 'quasar'
 export default {
   name: 'hello',
+  components: {
+    QCard,
+    QCardTitle,
+    QListHeader,
+    QToolbar,
+    QToolbarTitle,
+    QLayout,
+    QCardMedia,
+    QCardActions,
+    QCardSeparator,
+    QCardMain,
+    QList,
+    QItem,
+    QItemMain,
+    QItemSide,
+    QItemTile,
+    QCollapsible,
+    QRating,
+    QBtn,
+    QParallax,
+    QIcon,
+    QPopover,
+    QVideo
+  },
+  data(){
+    return {
+        email:"",
+        password:""
+    }
+  },
   methods: {
     loginAction(){
-      this.$router.push({
-        path: '/new'
-      })
+      event.preventDefault()
+      let options = {
+        method : "POST",
+        url: "http://192.168.1.173:3000/newhomevueLogin",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        data :{
+          email:this.email,
+          password:this.password
+        }
+      };
+      axios(options)
+        .then(res => {
+         if(res.status == 200){
+           this.$router.push({
+             path: '/new'
+           })
+         }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
   }
