@@ -5,7 +5,7 @@
 				  <form>
 					<input type="text" v-model="email" placeholder="Username">
 					<input type="password" v-model="password"  placeholder="Password">
-					<q-btn @click='loginAction'>Login</q-btn>
+					<q-btn color='primary' @click='loginAction'>Login</q-btn>
 				  </form>
 					
 				  <div class="login-help">
@@ -39,7 +39,9 @@ import {
   QParallax,
   QIcon,
   QPopover,
-  QVideo
+  QVideo,
+  Loading,
+  QSpinnerGears
 } from 'quasar'
 export default {
   name: 'hello',
@@ -65,20 +67,23 @@ export default {
     QParallax,
     QIcon,
     QPopover,
-    QVideo
+    QVideo,
+    Loading,
+    QSpinnerGears
   },
   data(){
     return {
-        email:"",
-        password:""
+        email:"sjlchougule@gmail.com",
+        password:"1234"
     }
   },
   methods: {
     loginAction(){
+      Loading.show()
       event.preventDefault()
       let options = {
         method : "POST",
-        url: "http://192.168.1.173:3000/newhomevueLogin",
+        url: "http://localhost:3000/newhomevueLogin",
         headers: {
           "Accept": "application/json",
           "Content-Type": "application/json"
@@ -90,6 +95,8 @@ export default {
       };
       axios(options)
         .then(res => {
+          Loading.hide()
+
          if(res.status == 200){
            this.$router.push({
              path: '/new'
@@ -97,6 +104,7 @@ export default {
          }
         })
         .catch(err => {
+          Loading.hide()
           console.log(err);
         });
     }

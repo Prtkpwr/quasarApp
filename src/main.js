@@ -15,6 +15,7 @@ import Quasar from 'quasar'
 import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VuePaginate from 'vue-paginate'
 
 
 
@@ -22,6 +23,7 @@ Vue.config.productionTip = false
 Vue.use(VueAxios)
 Vue.use(axios)
 Vue.use(Quasar) // Install Quasar Framework
+Vue.use(VuePaginate);
 
 if (__THEME === 'mat') {
   require('quasar-extras/roboto-font')

@@ -1,4 +1,5 @@
 <template>
+<div>
    <q-layout
       ref="layout"
       view="lHh Lpr fff"
@@ -67,9 +68,13 @@
          </div>
       </div>
    </q-layout>
+   <q-pagination @click="paginationAction" v-model="page" :min="minPages" :max="maxPages" />
+   </div>
 </template>
 
 <script>
+import _ from 'lodash';
+
 import axios from "axios";
 import {
   QCard,
@@ -93,15 +98,16 @@ import {
   QParallax,
   QIcon,
   QPopover,
-  QVideo
-} from 'quasar'
+  QVideo,
+  Loading,
+  QSpinnerGears,
+  QPagination,
+  QChip
+} from "quasar";
 export default {
-  
-  mounted() {
-    this.getHttp();
-  },
   components: {
     QCard,
+    QChip,
     QCardTitle,
     QListHeader,
     QToolbar,
@@ -122,57 +128,113 @@ export default {
     QParallax,
     QIcon,
     QPopover,
-    QVideo
+    QVideo,
+    Loading,
+    QSpinnerGears,
+    QPagination
   },
+
+  mounted() {
+    this.getHttp();
+  },
+
   data() {
     return {
+      page: 1,
+      minPages: 1,
+      maxPages: 19,
       temp: "wola",
-      movieData : {},
+      movieData: {},
       rounds: [],
       stars: 3,
-      lorem: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-   
+      pageLimit: 2,
+      totalPages: 0,
+      secondLastPage: 0,
+      team:[],
+
+      lorem:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     };
   },
   methods: {
-    logoutAction(){
-        this.$router.push('/')
+
+    tableData () {
+     return _.map(this.employees, (employee) => {
+       return {id: employee.id, name: employee.name, bossName: employee.boss.name}
+     })
+  },
+    logoutAction() {
+      this.$router.push("/");
     },
     getHttp() {
       let options = {
-        method : "GET",
-        url: "https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json",
+        method: "GET",
+        url:
+          "https://raw.githubusercontent.com/openfootball/football.json/master/2016-17/en.1.json",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json"
         }
       };
       axios(options)
         .then(res => {
-          this.movieData = res.data
-          this.rounds = res.data.rounds
+          this.movieData = res.data;
+          this.rounds = res.data.rounds;
+          for(let x in res.data.rounds){
+            for(let z in res.data.rounds[x].matches){
+              // console.log()
+              // res.data.rounds[x].matches[z].team1.name = this.team1;
+              // res.data.rounds[x].matches[z].team2.name = this.team2;
+              // res.data.rounds[x].matches[z].date = this.date;
+              this.team.push({
+                team1:res.data.rounds[x].matches[z].team1.name,
+                team2:res.data.rounds[x].matches[z].team2.name,
+                date:res.data.rounds[x].matches[z].date
+              })
+// 
+            }
+          }
+          console.log(this.team)
+          // this.totalPages = Math.ceil(this.rounds.length / this.pageLimit);
+          // this.maxPages = this.totalPages;
+          // this.secondLastPage = Math.floor(this.rounds.length / this.pageLimit);
+          // console.log(this.totalPages, this.secondLastPage);
+          
         })
         .catch(err => {
           console.log(err);
         });
+    },
+
+    paginationAction() {
+      console.log('hello')
     }
   }
 };
 </script>
 
 <style lang="stylus">
-@import '~variables'
-.logout
-   position:fixed;
-   right:10px;
-   top:5px;
+@import '~variables';
 
-.card-examples
-  .q-card
-    width 300px
-  .bigger
-    width 450px
-  @media (max-width $breakpoint-xs-max)
-    .q-card
-      width 100%
+.logout {
+  position: fixed;
+  right: 10px;
+  top: 5px;
+}
+
+.card-examples {
+  .q-card {
+    width: 300px;
+  }
+
+  .bigger {
+    width: 450px;
+  }
+
+  @media (max-width: $breakpoint-xs-max) {
+    .q-card {
+      width: 100%;
+    }
+  }
+}
 </style>

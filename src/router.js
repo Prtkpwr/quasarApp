@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 
 import Hello from '@/Hello.vue'
 import Main from '@/Main.vue'
+import Table from '@/Table.vue'
+import Lol from '@/Lol.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +32,11 @@ export default new VueRouter({
 
   routes: [
     { path: '/', component: Hello },
-    { path: '/new', component: Main }
+    { path: '/new', component: Main },
+    { path: '/table', component:Table},
+    { path: '/lol', component:Lol},
+    
+    // { path: '/tableconfig', component:ServerSideDataTable}
+
   ]
 })
